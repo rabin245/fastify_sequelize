@@ -30,10 +30,12 @@ export default fp(async function (fastify, opts) {
     fastify.decorate("Post", Post);
     fastify.decorate("User", User);
 
-    // Post.sync({ alter: true });
-    // User.sync({ alter: true });
-    Post.sync();
-    User.sync();
+    // await User.sync({ force: true });
+    // await Post.sync({ force: true });
+    // await User.sync({ alter: true });
+    // await Post.sync({ alter: true });
+    await User.sync();
+    await Post.sync();
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
