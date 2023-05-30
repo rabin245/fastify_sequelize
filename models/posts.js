@@ -12,6 +12,14 @@ const postModel = (sequelize) => {
       allowNull: false,
     },
     content: DataTypes.TEXT,
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
+    },
   });
 };
 
