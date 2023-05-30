@@ -1,11 +1,18 @@
 const postSchema = {
   type: "object",
   properties: {
-    id: { type: "number"},
+    id: { type: "number" },
     title: { type: "string" },
     content: { type: "string" },
-  }
-}
+    userId: { type: "number" },
+    user: {
+      type: "object",
+      properties: {
+        username: { type: "string" },
+      },
+    },
+  },
+};
 
 const idParamSchema = {
   type: "object",
@@ -13,48 +20,57 @@ const idParamSchema = {
   properties: {
     id: { type: "number" },
   },
-}
+};
+
+const postJsonBodySchema = {
+  type: "object",
+  required: ["title", "userId"],
+  properties: {
+    title: { type: "string" },
+    content: { type: "string" },
+    userId: { type: "number" },
+  },
+};
 
 export default {
-  getPosts : {
+  getPosts: {
     response: {
-        200: {
+      200: {
         type: "array",
         items: postSchema,
-      }
-    }
+      },
+    },
   },
   getPostById: {
     params: idParamSchema,
     response: {
       200: postSchema,
-    }
+    },
   },
   createPost: {
+    body: postJsonBodySchema,
+    response: {
+      200: postSchema,
+    },
+  },
+  deletePost: {
+    params: idParamSchema,
+    response: {
+      200: postSchema,
+    },
+  },
+  updatePost: {
+    params: idParamSchema,
     body: {
       type: "object",
       required: ["title"],
       properties: {
         title: { type: "string" },
         content: { type: "string" },
-      }
+      },
     },
     response: {
       200: postSchema,
-    }
+    },
   },
-  deletePost: {
-    params: idParamSchema,
-    response: {
-      200: postSchema,
-    }
-  },
-  updatePost: {
-    params: idParamSchema,
-    body: postSchema,
-    response: {
-      200: postSchema,
-    }
-  }
-}
-
+};
