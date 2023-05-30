@@ -2,6 +2,7 @@ export default {
   getPosts: async (request, reply) => {
     const Post = request.server.Post;
     const User = request.server.User;
+
     try {
       const posts = await Post.findAll({
         include: User,
@@ -10,7 +11,6 @@ export default {
       if (posts.length === 0) {
         reply.code(404).send({ error: "Not Found" });
       }
-
       return posts;
     } catch (error) {
       console.log(error);
@@ -42,9 +42,7 @@ export default {
     const { title, content, userId } = request.body;
 
     try {
-      const post = await Post.create(
-        { title, content, userId },
-      );
+      const post = await Post.create({ title, content, userId });
 
       return post;
     } catch (error) {

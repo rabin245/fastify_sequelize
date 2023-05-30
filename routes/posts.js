@@ -1,39 +1,44 @@
-import postsHandler from '../controllers/handlers/postsHandler.js'
-import postsSchema from '../controllers/schemas/postsSchema.js'
-
-const getPostsOption = {
-  schema: postsSchema.getPosts,
-  handler: postsHandler.getPosts
-}
-
-const getPostsByIdOption = {
-  schema: postsSchema.getPostById,
-  handler: postsHandler.getPostById
-}
-
-const createPostOption = {
-  schema: postsSchema.createPost,
-  handler: postsHandler.createPost,
-}
-
-const deletePostOption = {
-  schema: postsSchema.deletePost,
-  handler: postsHandler.deletePost,
-}
-
-const updatePostOption = {
-  schema: postsSchema.updatePost,
-  handler: postsHandler.updatePost,
-}
+import postsHandler from "../controllers/handlers/postsHandler.js";
+import postsSchema from "../controllers/schemas/postsSchema.js";
 
 export default async function (fastify, opts) {
-  fastify.get('/posts', getPostsOption )
+  const getPostsOption = {
+    schema: postsSchema.getPosts,
+    preHandler: fastify.authenticate,
+    handler: postsHandler.getPosts,
+  };
 
-  fastify.get('/posts/:id', getPostsByIdOption)
+  const getPostsByIdOption = {
+    schema: postsSchema.getPostById,
+    preHandler: fastify.authenticate,
+    handler: postsHandler.getPostById,
+  };
 
-  fastify.post('/posts', createPostOption)
+  const createPostOption = {
+    schema: postsSchema.createPost,
+    preHandler: fastify.authenticate,
+    handler: postsHandler.createPost,
+  };
 
-  fastify.delete('/posts/:id', deletePostOption)
+  const deletePostOption = {
+    schema: postsSchema.deletePost,
+    preHandler: fastify.authenticate,
+    handler: postsHandler.deletePost,
+  };
 
-  fastify.put('/posts/:id', updatePostOption)
+  const updatePostOption = {
+    schema: postsSchema.updatePost,
+    preHandler: fastify.authenticate,
+    handler: postsHandler.updatePost,
+  };
+
+  fastify.get("/posts", getPostsOption);
+
+  fastify.get("/posts/:id", getPostsByIdOption);
+
+  fastify.post("/posts", createPostOption);
+
+  fastify.delete("/posts/:id", deletePostOption);
+
+  fastify.put("/posts/:id", updatePostOption);
 }
