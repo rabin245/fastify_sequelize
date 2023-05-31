@@ -61,14 +61,7 @@ export default {
   },
   updatePost: {
     params: idParamSchema,
-    body: {
-      type: "object",
-      required: ["title"],
-      properties: {
-        title: { type: "string" },
-        content: { type: "string" },
-      },
-    },
+    body: postJsonBodySchema,
     response: {
       200: postSchema,
     },

@@ -52,6 +52,26 @@ async function session(fastify, opts) {
         });
     }
   });
+
+  fastify.decorate("authorize", async function (request, reply) {
+    try {
+      if (request.user.id != request.body.userId)
+        throw new Error("Unauthorized");
+
+      return;
+    } catch (error) {
+      console.log(error.message);
+      if (error.message === "Unauthorized")
+        reply
+          .code(401)
+          .send({ error: "Unauthorized", msg: "This is not your post" });
+      else
+        reply.code(500).send({
+          error: "Internal Server Error",
+          msg: error.message,
+        });
+    }
+  });
 }
 
 export default fastifyPlugin(session);

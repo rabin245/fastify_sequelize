@@ -12,9 +12,6 @@ export default {
 
       request.session.userId = user.id;
 
-      // console.log(request.session.sessionId);
-      // console.log(request.session.userId);
-      // console.log(request.session)
       reply.send({ message: "Login Success" });
     } catch (error) {
       console.log(error);
@@ -45,14 +42,10 @@ export default {
   },
   logout: async (request, reply) => {
     try {
-      if (!request.session)
-        throw new Error("No user logged in");
+      if (!request.session) throw new Error("No user logged in");
 
       // destroys session in store
       await request.session.destroy();
-
-      // reply.clearCookie("sessionId", request.session.cookie)
-      // request.session = null;
 
       reply.send({ message: "Logout Success" });
     } catch (error) {

@@ -39,7 +39,8 @@ export default {
   },
   createPost: async (request, reply) => {
     const Post = request.server.Post;
-    const { title, content, userId } = request.body;
+    const { title, content } = request.body;
+    const userId = request.user.id;
 
     try {
       const post = await Post.create({ title, content, userId });

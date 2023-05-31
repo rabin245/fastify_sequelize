@@ -22,13 +22,13 @@ export default async function (fastify, opts) {
 
   const deletePostOption = {
     schema: postsSchema.deletePost,
-    preHandler: fastify.authenticate,
+    preHandler: [fastify.authenticate, fastify.authorize],
     handler: postsHandler.deletePost,
   };
 
   const updatePostOption = {
     schema: postsSchema.updatePost,
-    preHandler: fastify.authenticate,
+    preHandler: [fastify.authenticate, fastify.authorize],
     handler: postsHandler.updatePost,
   };
 
