@@ -5,6 +5,7 @@ dotenv.config();
 
 import postModel from "../models/posts.js";
 import userModel from "../models/users.js";
+import sessionModel from "../models/sessionStore.js";
 
 export default fp(async function (fastify, opts) {
   const sequelize = new Sequelize(
@@ -23,6 +24,7 @@ export default fp(async function (fastify, opts) {
 
     const Post = postModel(sequelize);
     const User = userModel(sequelize);
+    const Sessions = sessionModel(sequelize);
 
     User.hasMany(Post, { foreignKey: "userId" });
     Post.belongsTo(User, { foreignKey: "userId" });
@@ -36,7 +38,10 @@ export default fp(async function (fastify, opts) {
     // await Post.sync({ alter: true });
     await User.sync();
     await Post.sync();
+    await Sessions.sync();
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
+
+  fastify.decorate("sequelize", sequelize);
 });

@@ -1,9 +1,13 @@
 import fastifyPlugin from "fastify-plugin";
 import fastifySession from "@fastify/session";
 import fastifyCookie from "@fastify/cookie";
+import ConnectSessionSequelize from "connect-session-sequelize";
 
 async function session(fastify, opts) {
   fastify.register(fastifyCookie);
+
+  const SequelizeStore = ConnectSessionSequelize(fastifySession.Store);
+
   fastify.register(fastifySession, {
     cookieName: "sessionId",
     secret: "a secret with minimum length of 32 characters",
@@ -13,14 +17,19 @@ async function session(fastify, opts) {
       maxAge: 60 * 1000,
       expires: Date.now() + 60 * 1000,
     },
-    saveUninitialized: false,   // don't create session until something stored
+    expires: Date.now() + 60 * 1000,
+    saveUninitialized: false, // don't create session until something stored
+    store: new SequelizeStore({
+      db: fastify.sequelize,
+      table: "Sessions",
+      checkExpirationInterval: 5 * 60 * 1000, // check for expired sessions every 5 minutes and delete them
+    }),
   });
 
-  fastify.decorate("authenticate", async function (request, reply, done) {
+  fastify.decorate("authenticate", async function (request, reply) {
     try {
       if (!request.session.userId) {
-        console.log("\n\n\nhere i am hello world \n\n\n");
-        throw new Error("klsdjflsjdklfjsdlfjlsdfj");
+        throw new Error("No user logged in");
       }
       const User = request.server.User;
       const user = await User.findByPk(request.session.userId);
